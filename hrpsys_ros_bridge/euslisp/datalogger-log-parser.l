@@ -85,9 +85,9 @@
                          (instance datalogger-log-parser :init (format nil "~A/~A" dir-str x)
                                    :name (let ((nm (pathname-type x)))
                                            (read-from-string
-                                            (if (and (substringp "(" nm) (substringp ")" nm))
-                                                (let* ((strlist (data-string-split nm "_")) ;; AA(Robot)0_BB_CC -> (list AA(Robot)0 BB CC)
-                                                       (suffix-str-list (subseq strlist (1+ (position-if #'(lambda (x) (and (substringp "(" x) (substringp ")" x))) strlist)))) ;; (list AA(Robot)0 BB CC) -> (list BB CC)
+                                            (if (or (and (substringp "(" nm) (substringp ")" nm)) (substringp "RobotHardware_choreonoid0" nm))
+                                                (let* ((strlist (data-string-split nm "_")) ;; AA(Robot)0_BB_CC -> (list AA(Robot)0 BB CC), RobotHardware_choreonoid0_BB_CC -> (list RobotHardware choreonoid0 BB CC)
+                                                       (suffix-str-list (subseq strlist (1+ (position-if #'(lambda (x) (or (and (substringp "(" x) (substringp ")" x)) (substringp "choreonoid0" x))) strlist)))) ;; (list AA(Robot)0 BB CC) -> (list BB CC)
                                                        (suffix-str (let ((str (car suffix-str-list))) (dolist (tstr (cdr suffix-str-list)) (setq str (format nil "~A_~A" str tstr))) str))) ;; (list BB CC) -> BB_CC
                                                   (format nil "RobotHardware0_~A" suffix-str))
                                               nm)))))
