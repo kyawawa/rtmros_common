@@ -1562,7 +1562,7 @@
   (:set-st-param
    (&rest args
     &key st-algorithm
-         eefm-pos-damping-gain eefm-rot-damping-gain eefm-pos-time-const-support eefm-rot-time-const eefm-swing-pos-spring-gain eefm-swing-pos-time-const eefm-swing-rot-spring-gain eefm-swing-rot-time-const eefm-ee-forcemoment-distribution-weight
+         eefm-pos-damping-gain eefm-rot-damping-gain eefm-pos-time-const-support eefm-rot-time-const eefm-swing-pos-spring-gain eefm-swing-pos-time-const eefm-swing-rot-spring-gain eefm-swing-rot-time-const eefm-ee-forcemoment-distribution-weight swing-servo-pgain-percentage swing-servo-dgain-percentage
     &allow-other-keys)
    "Set Stabilizer parameters.
     For arguments, please see (send *ri* :get-st-param-arguments)."
@@ -1615,6 +1615,14 @@
                  (let ((tmp (send prm :eefm_ee_forcemoment_distribution_weight)))
                    (setq (tmp . ros::_data) (apply #'concatenate float-vector eefm-ee-forcemoment-distribution-weight))
                    (list :eefm-ee-forcemoment-distribution-weight tmp)))
+             (if (and (memq :swing-servo-pgain-percentage args) swing-servo-pgain-percentage)
+                 (let ((tmp (send prm :eefm_ee_forcemoment_distribution_weight)))
+                   (setq (tmp . ros::_data) (apply #'concatenate float-vector swing-servo-pgain-percentage))
+                   (list :swing-servo-pgain-percentage tmp)))
+             (if (and (memq :swing-servo-dgain-percentage args) swing-servo-dgain-percentage)
+                 (let ((tmp (send prm :eefm_ee_forcemoment_distribution_weight)))
+                   (setq (tmp . ros::_data) (apply #'concatenate float-vector swing-servo-dgain-percentage))
+                   (list :swing-servo-dgain-percentage tmp)))
              args))))
   (:set-st-param-for-non-feedback-LIP-mode
    ()
