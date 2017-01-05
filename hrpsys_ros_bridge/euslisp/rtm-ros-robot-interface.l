@@ -1562,7 +1562,7 @@
   (:set-st-param
    (&rest args
     &key st-algorithm
-         eefm-pos-damping-gain eefm-rot-damping-gain eefm-pos-time-const-support eefm-rot-time-const eefm-swing-pos-spring-gain eefm-swing-pos-time-const eefm-swing-rot-spring-gain eefm-swing-rot-time-const eefm-ee-forcemoment-distribution-weight swing-servo-pgain-percentage swing-servo-dgain-percentage
+         eefm-pos-damping-gain eefm-rot-damping-gain eefm-pos-time-const-support eefm-rot-time-const eefm-swing-pos-spring-gain eefm-swing-pos-time-const eefm-swing-rot-spring-gain eefm-swing-rot-time-const eefm-ee-forcemoment-distribution-weight swing-servo-pgain-percentage swing-servo-dgain-percentage eefm-prev-act-force-cutoff-freq
     &allow-other-keys)
    "Set Stabilizer parameters.
     For arguments, please see (send *ri* :get-st-param-arguments)."
@@ -1623,6 +1623,10 @@
                  (let ((tmp (send prm :swing_servo_dgain_percentage)))
                    (setq (tmp . ros::_data) (apply #'concatenate float-vector swing-servo-dgain-percentage))
                    (list :swing-servo-dgain-percentage tmp)))
+             (if (and (memq :eefm-prev-act-force-cutoff-freq args) eefm-prev-act-force-cutoff-freq)
+                 (let ((tmp (send prm :eefm_prev_act_force_cutoff_freq)))
+                   (setq (tmp . ros::_data) (apply #'concatenate float-vector eefm-prev-act-force-cutoff-freq))
+                   (list :eefm-prev-act-force-cutoff-freq tmp)))
              args))))
   (:set-st-param-for-non-feedback-LIP-mode
    ()
