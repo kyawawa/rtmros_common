@@ -18,6 +18,7 @@
   <arg name="USE_COMMON" default="true" />
   <arg name="USE_ROBOTHARDWARE" default="false" />
   <arg name="USE_WALKING" default="false" />
+  <arg name="USE_JUMP" default="false" />
   <arg name="USE_COLLISIONCHECK" default="true" />
   <arg name="USE_IMPEDANCECONTROLLER" default="false" />
   <arg name="USE_GRASPCONTROLLER" default="false" />
@@ -171,6 +172,14 @@
     <rtconnect from="st.rtc:COPInfo" to="HrpsysSeqStateROSBridge0.rtc:rsCOPInfo" subscription_type="$(arg subscription_type)" push_policy="$(arg push_policy)" push_rate="$(arg push_rate)" buffer_length="$(arg buffer_length)"/>
     <rtactivate component="AutoBalancerServiceROSBridge.rtc" />
     <rtactivate component="StabilizerServiceROSBridge.rtc" />
+    <rtactivate component="KalmanFilterServiceROSBridge.rtc" />
+  </group>
+
+  <group if="$(arg USE_JUMP)" >
+    <node pkg="hrpsys_ros_bridge" name="KalmanFilterServiceROSBridge" type="KalmanFilterServiceROSBridgeComp"
+          output="screen" args ="$(arg openrtm_args)" />
+    <rtconnect from="kf.rtc:rpy" to="HrpsysSeqStateROSBridge0.rtc:baseRpy" subscription_type="$(arg subscription_type)" push_policy="$(arg push_policy)" push_rate="$(arg push_rate)" buffer_length="$(arg buffer_length)"/>
+    <rtconnect from="KalmanFilterServiceROSBridge.rtc:KalmanFilterService" to="kf.rtc:KalmanFilterService"  subscription_type="new"/>
     <rtactivate component="KalmanFilterServiceROSBridge.rtc" />
   </group>
 
